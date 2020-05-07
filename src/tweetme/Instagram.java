@@ -18,13 +18,23 @@ import org.brunocvcunha.instagram4j.requests.payload.InstagramLoginResult;
  */
 public class Instagram {
     public static Instagram4j instagram;
+   
     public Instagram(String userName, String passWord) throws IOException, Exception{
-        instagram = Instagram4j.builder().username(userName).password(passWord).build();
-        instagram.setup();
-        InstagramLoginResult login = instagram.login();
-        
+        if(userName != "" || passWord != "")
+        {
+            
+            instagram = Instagram4j.builder().username(userName).password(passWord).build();
+            instagram.setup();
+            InstagramLoginResult login = instagram.login();
+
         
         }
+        else
+        {
+            //do nothing
+            
+        }
+    }
 
    
 }
