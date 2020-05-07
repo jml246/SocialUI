@@ -5,14 +5,18 @@
  */
 package tweetme;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.brunocvcunha.instagram4j.requests.InstagramUploadPhotoRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramUploadVideoRequest;
@@ -28,12 +32,12 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener{
      */
     public SocialUI() throws IOException {
         initComponents();
-
+        this.setLocationRelativeTo(null);
         jTextPane1.addKeyListener(this);
         jTextPane2.addKeyListener(this);
         mainTextLabel.setText("Characters: 0");
         this.hashTagLabel.setText("Hash Tags: 0");
-        updateFeedlabel("<html>");
+        this.feedLabel.setText("<html><br/>");
 
      
     }
@@ -213,26 +217,64 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "mp4");
-
+        FileNameExtensionFilter filter = new FileNameExtensionFilter( "Image files","jpg", "jpeg","png", "mp4");
+        File selectedFile = null;
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
+        BufferedImage bufferedImage, newBufferedImage = null;
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         int result = fileChooser.showOpenDialog(this.jFrame1);
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
             // user selects a file
-            File selectedFile = fileChooser.getSelectedFile();
+            selectedFile = fileChooser.getSelectedFile();
             this.filePathField.setText(selectedFile.getAbsolutePath());
         }
-
+        
+        //Do conversion from png to jpg
+        if(selectedFile.getAbsolutePath().contains(".png")){
+            System.out.println("Converting png to jpg");
+         
+            try {
+                bufferedImage = ImageIO.read(new File(selectedFile.getAbsolutePath()));
+                System.out.println("Fetching absolute path: "+selectedFile.getAbsolutePath());
+                this.updateFeedlabel("Reading png file...");
+                newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+			bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+	  newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                String newFilePath = selectedFile.getParent()+"\\"+"temp.jpg";
+                
+                ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));
+                this.updateFeedlabel("Converting png file to jpg...");
+                System.out.println("Writing to: "+newFilePath);
+                this.filePathField.setText((newFilePath));
+                this.updateFeedlabel("Converted png file to jpg completed...");
+            } catch (IOException ex) {
+                Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
     private void updateFeedlabel(String msg)
     {
-        feedLabel.setText(feedLabel.getText() + msg + "<br/>");
+        feedLabel.setText(feedLabel.getText() + new java.util.Date() + ": " + msg + "<br/>");
     }
+    
+  
+    private boolean checkHTTPResponse()
+    {
+        if(Instagram.instagram.getLastResponse().toString().contains("HTTP/1.1 200 OK"))
+        {
+            return true;
+        }
+            return false; 
+    }    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        
         // Check if there is text, photo or video and handle accordingly
@@ -249,24 +291,42 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener{
             MSTwitter.tweet.updateStatusWithMedia(this.jTextPane1.getText(), BigInteger.ZERO, f);
             updateFeedlabel("Sent to twitter...");
             try {
-                if(this.filePathField.getText().contains("mp4"))
+                if(this.filePathField.getText().contains("jpg") ||
+                        this.filePathField.getText().contains("jpeg"))
                 {
                     updateFeedlabel("Sending Instagram post with image...");
-                    Instagram.instagram.sendRequest(new InstagramUploadVideoRequest(
-                    f, this.jTextPane1.getText()));                    
-                    updateFeedlabel("Sent to Instagram...");
+                    Instagram.instagram.sendRequest(new InstagramUploadPhotoRequest(
+                    f, this.jTextPane1.getText() +" "+ this.jTextPane2.getText())); 
+                   
+                    if(checkHTTPResponse()){
+                        updateFeedlabel("Post sent to Instagram OK...");
+                    }
+                    else{
+                        updateFeedlabel("Post sent to Instagram Failed...");
+                        new Log(Instagram.instagram.getLastResponse().toString());
+                    }
                 }
                 else
                 {
-                    updateFeedlabel("Sending Instagram post with video...");
-                    Instagram.instagram.sendRequest(new InstagramUploadPhotoRequest(
-                    f, this.jTextPane1.getText()));
-                    updateFeedlabel("Sent to Instagram...");
+                    if(this.filePathField.getText().contains("mp4")){
+                        updateFeedlabel("Sending Instagram post with video...");
+                        Instagram.instagram.sendRequest(new InstagramUploadVideoRequest(
+                        f, this.jTextPane1.getText() +" "+ this.jTextPane2.getText()));
+                        updateFeedlabel("Sent to Instagram...");
+                        if(checkHTTPResponse()){
+                            updateFeedlabel("Post sent to Instagram OK...");
+                        }
+                        else{
+                            updateFeedlabel("Post sent to Instagram Failed...");
+                            new Log(Instagram.instagram.getLastResponse().toString());
+                        }
+                    }
                 }
                 
                 
         } catch (IOException ex) {
             Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
+            new Log(ex.getMessage());
         }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

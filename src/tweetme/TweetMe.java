@@ -27,20 +27,9 @@ public ArrayList<String> arrTweets;
      */
     public static void main(String[] args) throws InterruptedException, IOException, Exception {
             new MSTwitter();
-            new SocialUI().setVisible(true);
-            
-            System.out.println(args[0]);
-            System.out.println(args[1]);
-            System.out.println(args[2]);
-            //new Instagram(args[1], args[2]);
-            //new MSTwitter();
-            //File f = new File("C:\\Users\\GHA\\Desktop\\tw.jpg");
-            //MSTwitter.tweet.updateStatusWithMedia("sample thing", BigInteger.ZERO, f );
-            
-            //new TweetMe().publishTweetsFromFile(args[0]);
-            
-            
-            
+            new InstagramLogin().setVisible(true);
+            //for testing form purposes
+            //new SocialUI().setVisible(true);
     }
     
 public void publishTweetsFromFile(String file) 

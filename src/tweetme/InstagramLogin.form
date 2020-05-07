@@ -124,11 +124,11 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="jPasswordField1"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jPasswordField1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextField1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jTextField1"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>

@@ -7,6 +7,7 @@ package tweetme;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +20,8 @@ public class InstagramLogin extends javax.swing.JFrame {
      */
     public InstagramLogin() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.jPasswordField1.setText("");
     }
 
     /**
@@ -62,8 +65,11 @@ public class InstagramLogin extends javax.swing.JFrame {
         );
 
         jPasswordField1.setText("jPasswordField1");
-
-        jTextField1.setText("jTextField1");
+        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("User Name");
 
@@ -147,17 +153,46 @@ public class InstagramLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private boolean checkCredentials(){
+        
+        if(jTextField1.getText() == "" || jPasswordField1.getPassword().length <= 0)
+        {
+            JOptionPane.showMessageDialog(null, "User name and password needed");
+            return false;
+        }
+        else
+            return true;
+        
+    }
+    
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            // TODO add your handling code here:
-            
-            
-            new Instagram(this.jTextField1.getText(), new String(jPasswordField1.getPassword()));
-        } catch (Exception ex) {
-            Logger.getLogger(InstagramLogin.class.getName()).log(Level.SEVERE, null, ex);
+        
+       
+        try {  
+            if(checkCredentials()){
+                new Instagram(this.jTextField1.getText(), new String(jPasswordField1.getPassword()));
+                System.out.println("Print Successful Login header status: "+Instagram.instagram.getLastResponse());
+                System.out.println(Instagram.instagram.getLastResponse().toString().contains("HTTP/1.1 200 OK"));
+                if((Instagram.instagram.getLastResponse().toString().contains("HTTP/1.1 200 OK")))
+                    this.dispose();
+                }
+            else{
+                JOptionPane.showMessageDialog(null, "User name or password is incorrect - could not log in. Please try again.");
+            }
         }
+        catch (Exception ex) {
+            Logger.getLogger(InstagramLogin.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+        }
+
+        
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     /**
      * @param args the command line arguments
