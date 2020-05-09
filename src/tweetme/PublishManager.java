@@ -19,13 +19,13 @@ import java.util.logging.Logger;
  * @author jose
  */
 public class PublishManager extends Thread{
-    private CopyOnWriteArrayList<Media> media;
+    protected CopyOnWriteArrayList<Media> media;
     public PublishManager()
     {
         media = new CopyOnWriteArrayList<>();
     }
 
-    public CopyOnWriteArrayList getMedia() {
+    public CopyOnWriteArrayList getMediaArr() {
         return media;
     }
 
@@ -43,7 +43,7 @@ public class PublishManager extends Thread{
     {
         Date d = new Date();
         try{
-        for (Media m:media){//Iterator<Media> it = media.iterator(); it.hasNext(); ) {
+        for (Media m : media){//Iterator<Media> it = media.iterator(); it.hasNext(); ) {
             //Media m = it.next();
             System.out.println("Manager is going through the list..."+m.toString());
             if(d.after(m.getTimeToPublish()))
