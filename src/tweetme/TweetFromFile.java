@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 
 /**
  */
-public class TweetMe {
+public class TweetFromFile {
 
      
     
@@ -25,12 +25,6 @@ public ArrayList<String> arrTweets;
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws InterruptedException, IOException, Exception {
-            new MSTwitter();
-            new InstagramLogin().setVisible(true);
-            //for testing form purposes
-            //new SocialUI().setVisible(true);
-    }
     
 public void publishTweetsFromFile(String file) 
     {

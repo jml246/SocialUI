@@ -15,12 +15,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.brunocvcunha.instagram4j.requests.InstagramUploadPhotoRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramUploadVideoRequest;
@@ -30,11 +34,12 @@ import org.brunocvcunha.instagram4j.requests.InstagramUploadVideoRequest;
  ** @author Jose Linares
  */
 public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionListener{
-
+    int count = 0;
     /**
      * Creates new form SocialUI
      */
     public SocialUI() throws IOException {
+       
         initComponents();
                    try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -73,7 +78,10 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         jLabel7.setText("Characters: 0");
         
         this.hashTagLabel.setText("Hash Tags: 0");
-        this.feedLabel.setText("<html><br/>");
+        this.feedLabel.setLineWrap(true);
+        this.feedLabel.setWrapStyleWord(true);
+        
+        this.feedLabel.setText("");
 
      
     }
@@ -91,7 +99,8 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         jFrame1 = new javax.swing.JFrame();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        feedLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        feedLabel = new javax.swing.JTextArea();
         jPanel9 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -109,6 +118,8 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
+        jSpinner1 = new javax.swing.JSpinner();
+        jLabel6 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
@@ -149,8 +160,11 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Social UI");
 
-        feedLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        feedLabel.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
+        feedLabel.setEditable(false);
+        feedLabel.setColumns(20);
+        feedLabel.setRows(5);
+        feedLabel.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(feedLabel);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -162,15 +176,15 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel3))
-                    .addComponent(feedLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(feedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(112, 112, 112)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(138, 138, 138)
                 .addComponent(jLabel3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -253,10 +267,17 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
             }
         });
 
+        jLabel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Image"));
+
+        jTextArea3.setEditable(false);
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
         jTextArea3.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(jTextArea3);
+
+        jSpinner1.setToolTipText("Minutes to publish");
+
+        jLabel6.setText("Schedule in minutes");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -264,12 +285,20 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE))
-                .addContainerGap(127, Short.MAX_VALUE))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,7 +309,10 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addComponent(jButton1))
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)))
         );
 
         jCheckBox1.setSelected(true);
@@ -365,21 +397,22 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(86, 86, 86))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(12, Short.MAX_VALUE))
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jMenu2.setText("Social UI");
@@ -410,7 +443,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(16, 16, 16))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 916, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -426,61 +459,19 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        File f = new File(this.filePathField.getText());
-        // Check if there is text, photo or video and handle accordingly
-        if(this.jCheckBox1.isSelected()){
-            if(this.filePathField.getText().length() <= 0){
-                updateFeedlabel("Sending tweet...");
-                MSTwitter.tweet.setStatus(this.jTextArea1.getText() + " " + this.jTextArea1.getText());
-                updateFeedlabel("Sent tweet...");
-            }
-        }
-        if(this.jCheckBox1.isSelected() && this.filePathField.getText().length() > 0){
-            
-            updateFeedlabel("Sending tweet with image...");
-            MSTwitter.tweet.updateStatusWithMedia(this.jTextArea1.getText(), BigInteger.ZERO, f);
-            updateFeedlabel("Sent to twitter...");
-        }
-        if(this.jCheckBox2.isSelected() && this.filePathField.getText().length() > 0)
-        {
-            try {
-                if(this.filePathField.getText().contains("jpg") ||
-                    this.filePathField.getText().contains("jpeg"))
-                {
-                    updateFeedlabel("Sending Instagram post with image...");
-                    Instagram.instagram.sendRequest(new InstagramUploadPhotoRequest(
-                        f, this.jTextArea1.getText() +" "+ this.jTextArea2.getText()));
-
-                if(checkHTTPResponse()){
-                    updateFeedlabel("Post sent to Instagram OK...");
-                }
-                else{
-                        updateFeedlabel("Post sent to Instagram Failed...");
-                        new Log(Instagram.instagram.getLastResponse().toString());
-                    }
-                }
-                else
-                {
-                if(this.filePathField.getText().contains("mp4")){
-                    updateFeedlabel("Sending Instagram post with video...");
-                    Instagram.instagram.sendRequest(new InstagramUploadVideoRequest(
-                        f, this.jTextArea1.getText() +" "+ this.jTextArea2.getText()));
-                updateFeedlabel("Sent to Instagram...");
-                if(checkHTTPResponse()){
-                    updateFeedlabel("Post sent to Instagram OK...");
-                }
-                else{
-                    updateFeedlabel("Post sent to Instagram Failed...");
-                    new Log(Instagram.instagram.getLastResponse().toString());
-                }
-            }
-        }
-
-        } catch (IOException ex) {
-            Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-            new Log(ex.getMessage());
-        }
-        }
+  
+        String s = new String();
+                s = this.jTextArea1.getText() +" "+ this.jTextArea2.getText();
+                Media m = new Media(filePathField.getText(),
+                        s, (int) this.jSpinner1.getValue(),
+                                this.jCheckBox1.isSelected(),
+                                this.jCheckBox2.isSelected()
+                        );
+               // Media temp = new Media("C:/image.png","This is a test", 5, true, true);
+               // System.out.println(temp.toString());
+                Main.publishMan.addMedia(m);
+                Main.mainGui.updateFeedlabel("Sending post to scheduler... Post at "+m.getTimeToPublish());
+                
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -504,7 +495,8 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
             if(selectedFile.getAbsolutePath().contains(".jpg") || (selectedFile.getAbsolutePath().contains(".jpeg"))){
             ImageIcon img = new ImageIcon(selectedFile.getAbsolutePath());
             Image imgIcon = img.getImage();
-            Image newImg = imgIcon.getScaledInstance(300, 300, Image.SCALE_DEFAULT);
+            int h=jLabel4.getHeight()-40;
+            Image newImg = imgIcon.getScaledInstance(jLabel4.getWidth(), h, Image.SCALE_DEFAULT);
             jLabel4.setIcon(new ImageIcon(newImg));    
                   
             }
@@ -525,7 +517,8 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                 Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                newFilePath = selectedFile.getParent()+"\\"+"social-ui-temp.jpg";
+                long l = new Date().getTime();
+                newFilePath = selectedFile.getParent()+"\\"+"social-ui-temp-" +  l + ".jpg";
 
                 ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));
                 this.updateFeedlabel("Converting png file to jpg...");
@@ -569,15 +562,25 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                     
                     "<p>Bug reports or feauture requests: <p/>"+
                     "<p>send an email to jose.linares@gha.gi.</p>" +
-                    "Version 0.9"+
+                    "Version 0.9 beta"+
+                    
                     "</html>");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-    private void updateFeedlabel(String msg)
+    public void updateFeedlabel(String msg)
     {
-        feedLabel.setText(feedLabel.getText() + new java.util.Date() + ": " + msg + "<br/>");
+        feedLabel.setText(feedLabel.getText() + new java.util.Date() + ": " + msg + "\n");
     }
     
-  
+    public String getFeedLabelText()
+    {
+        return this.feedLabel.getText();
+    }
+    public JTextArea getFeedLabel()
+    {
+        return this.feedLabel;
+    }
+    
+    
     private boolean checkHTTPResponse()
     {
         if(Instagram.instagram.getLastResponse().toString().contains("HTTP/1.1 200 OK"))
@@ -647,7 +650,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         String words[]= jTextArea2.getText().split("\\s");  
         
         //form the text for output demo
-        jTextArea3.setText(this.jTextArea1.getText() + "" + this.jTextArea2.getText());
+        jTextArea3.setText(this.jTextArea1.getText() + "\t" + this.jTextArea2.getText());
         
         jLabel7.setText("Characters: " + jTextArea3.getText().length());
         mainTextLabel.setText("Characters: " + mainText.length());
@@ -657,15 +660,22 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
             //System.out.println("adding hash");
             hashTagLabel.setText("Hash Tags: " + words.length);
         }
-        
-        
+        if(words.length > 30){
+            this.jButton1.setEnabled(false);
+            this.updateFeedlabel("Maximum hash tags exceeded for Instagram");
+            
+        }
+        else
+        {
+            this.jButton1.setEnabled(true);
+        }
     }  
 
     @Override
     public void keyPressed(KeyEvent e) {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel feedLabel;
+    private javax.swing.JTextArea feedLabel;
     private javax.swing.JTextField filePathField;
     private javax.swing.JLabel hashTagLabel;
     private javax.swing.JButton jButton1;
@@ -678,6 +688,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -691,8 +702,10 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
@@ -703,6 +716,8 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
     public void actionPerformed(ActionEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
 
 
 
