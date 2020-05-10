@@ -592,7 +592,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        new DeleteScheduledPost().setVisible(true);
+        new DeletePost();
     }//GEN-LAST:event_jButton3ActionPerformed
     public void updateFeedlabel(String msg)
     {
