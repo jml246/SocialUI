@@ -6,38 +6,58 @@
 package tweetme;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import tweetme.Main;
+import tweetme.Media;
 
 /**
  *
  * @author jose
  */
-public class DeleteScheduledPost extends javax.swing.JFrame {
-    CopyOnWriteArrayList mediaPub  = Main.publishMan.getMediaArr();
+public class DeleteScheduledPostold extends javax.swing.JFrame {
+    private CopyOnWriteArrayList mediaPub  = Main.publishMan.getMediaArr();
     /**
-     * Creates new form DeleteScheduledPost
+     * Creates new form DeleteScheduledPostold
      */
+    
+
     ArrayList<Media> media = new ArrayList<>(mediaPub);
     DefaultListModel listModel;
-    public DeleteScheduledPost() {
+    JPanel panel;
+    JLabel label;
+    Icon img;
+    public DeleteScheduledPostold() {
         initComponents();
+        //new MarioList();
+      
         
        listModel = new DefaultListModel();
-       this.jList1.setModel(listModel);
+       this.menuList.setModel(listModel);
        for(Media m : media){           
            listModel.addElement(String.valueOf(m.getTimeToPublish()) + " | " + m.getText() + " | " + m.getFilePath());
-       }
-               
-       
-//listModel.addElement("Jane Doe");
-//listModel.addElement("John Smith");
+       } 
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,14 +69,14 @@ public class DeleteScheduledPost extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        menuList = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Delete Scheduled Post");
 
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jList1);
+        menuList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(menuList);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -108,8 +128,8 @@ public class DeleteScheduledPost extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-     DefaultListModel model = (DefaultListModel) jList1.getModel();
-     int selectedIndex = this.jList1.getSelectedIndex();
+     
+     int selectedIndex = this.menuList.getSelectedIndex();
      if (selectedIndex != -1) {
         listModel.remove(selectedIndex);
         Media m = Main.publishMan.media.get(selectedIndex);
@@ -134,28 +154,29 @@ public class DeleteScheduledPost extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DeleteScheduledPost.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteScheduledPostold.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DeleteScheduledPost.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteScheduledPostold.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DeleteScheduledPost.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteScheduledPostold.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DeleteScheduledPost.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DeleteScheduledPostold.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DeleteScheduledPost().setVisible(true);
+                new DeleteScheduledPostold().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> menuList;
     // End of variables declaration//GEN-END:variables
 }

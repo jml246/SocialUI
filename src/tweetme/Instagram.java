@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import org.brunocvcunha.instagram4j.Instagram4j;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramLoginResult;
+import static tweetme.Main.mainGui;
 
 
 
@@ -27,13 +28,14 @@ public class Instagram {
             instagram = Instagram4j.builder().username(userName).password(passWord).build();
             instagram.setup();
             login = instagram.login();
-            if((login.getStatus().equals("ok")))
+            if((!login.getStatus().equals("ok")))
             {
-                new SocialUI().setVisible(true);
+             JOptionPane.showMessageDialog(null, "User name or password is incorrect - could not log in. Please try again."); 
+            
             }
             else{
-                JOptionPane.showMessageDialog(null, "User name or password is incorrect - could not log in. Please try again."); 
-            }
+                mainGui.setVisible(true);
+                }
         }
         else
         {

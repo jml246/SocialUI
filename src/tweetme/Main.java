@@ -18,13 +18,13 @@ public class Main {
     public static void main(String args[]) throws IOException
     {
         //start login process
-      //          new MSTwitter();
-//            new InstagramLogin().setVisible(true);
-            //for testing form purposes
+        new MSTwitter();
+        new InstagramLogin().setVisible(true);
+            
         publishMan = new PublishManager();
         publishMan.start(); 
         mainGui = new SocialUI();
-        mainGui.setVisible(true);
+        
        
         new Main();     
     }
