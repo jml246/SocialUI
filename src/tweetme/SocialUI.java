@@ -539,10 +539,10 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         JOptionPane.showMessageDialog(null,"<html>"+
                     
                     "<p><strong>Developed by J Linares.</strong></p>" +
-                    "<p>Public Health Department - GHA.</p>" +
+                    "<p></p>" +
                     
                     "<p>Bug reports or feauture requests: <p/>"+
-                    "<p>jose.linares@gha.gi.</p>" +
+                    "<p>hello@joselinares.me.</p>" +
                     "Version 0.9 beta"+
                     
                     "</html>");
