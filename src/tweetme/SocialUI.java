@@ -480,123 +480,40 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                 Main.mainGui.updateFeedlabel("Sending post to scheduler... Post at "+m.getTimeToPublish());
                 
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    public void updateFilePathField(String p)
+    {
+        this.filePathField.setText(p);
+    }
+    public JLabel getImageScreen(){
+        return this.jLabel4;
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        FileNameExtensionFilter filter = new FileNameExtensionFilter( "Image files","jpg", "jpeg","png", "mp4");
-        File selectedFile = null;
-        String newFilePath = null;
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(filter);
-        BufferedImage bufferedImage = null, newBufferedImage = null;
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        int result = fileChooser.showOpenDialog(this.jFrame1);
 
-        long l = new Date().getTime();
-        final int TWIDTH = 1024;
-        final int THEIGHT = 512;
-        final int IWIDTH = 1080;
-        final int IHEIGHT = 1350;
-        boolean isPortrait = false;
-        int imgW = 0;
-        int imgH = 0;
-        
-        
+        FileNameExtensionFilter filter = new FileNameExtensionFilter( "Image files","jpg", "jpeg","png", "mp4");      
+        final JFileChooser fileChooser = new JFileChooser();
+        File selectedFile = null;
+        fileChooser.setFileFilter(filter);
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+       
+         
+        int result = fileChooser.showOpenDialog(this.jFrame1);
+       
         if (result == JFileChooser.APPROVE_OPTION)
         {
+               
             // user selects a file
             selectedFile = fileChooser.getSelectedFile();
-            this.filePathField.setText(selectedFile.getAbsolutePath());
-        }
-        try {
-            //read file
-            bufferedImage = ImageIO.read(new File(selectedFile.getAbsolutePath()));
-        } catch (IOException ex) {
-            Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //no conversion needed for instagram
-        if(selectedFile.getAbsolutePath().contains(".jpg") || 
-                (selectedFile.getAbsolutePath().contains(".jpeg"))){
-        ImageIcon img = new ImageIcon(selectedFile.getAbsolutePath());
-        Image imgIcon = img.getImage();
-        int h=jLabel4.getHeight()-40;
-        Image newImg = imgIcon.getScaledInstance(jLabel4.getWidth(), h, Image.SCALE_DEFAULT);
-        jLabel4.setIcon(new ImageIcon(newImg));    
-
-        }
-        
-        //Is it portrait or landscape?
-        if(bufferedImage.getWidth() > bufferedImage.getHeight())
-            isPortrait = false;
-        //Do checks on image dimensions for Instagram
-        if(bufferedImage.getWidth() > THEIGHT || bufferedImage.getHeight() > TWIDTH ){
-            JOptionPane.showMessageDialog(null,"Image is too large for Instagram. Max is 1080 x 1350 and 5MB limit");
-           
-        }
-        // Do checks on image dimensions for Twitter
-        if(bufferedImage.getWidth() > IHEIGHT || bufferedImage.getHeight() > IWIDTH ){
-            JOptionPane.showMessageDialog(null,"Image is too large for Twitter. Max is 1024 x 512");
+        new Runnable()
+        { 
+            public void run(){ 
+                System.out.println("Inside Runnable...");
+                new ConvertImage(fileChooser.getSelectedFile());
+           } 
+        }.run();
             
         }
-
-            
-        //Do conversion from png to jpg
-        if(selectedFile.getAbsolutePath().contains(".png")){
-            System.out.println("Converting png to jpg");
-            System.out.println("Fetching absolute path: "+selectedFile.getAbsolutePath());
-            this.updateFeedlabel("Reading png file...");
-            newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
-                bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
-
-            try {
-                
-                newFilePath = selectedFile.getParent()+"\\"+"social-ui-temp-" +  l + ".jpg";
-
-                ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));
-                this.updateFeedlabel("Converting png file to jpg...");
-                System.out.println("Writing to: "+newFilePath);
-                this.filePathField.setText((newFilePath));
-                this.updateFeedlabel("Converted png file to jpg completed...");
-                
-            } catch (IOException ex) {
-                Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            //find proportional dimensions
-               if(bufferedImage.getWidth() > TWIDTH){
-                   imgW =bufferedImage.getWidth();
-                    while(imgW > TWIDTH){
-                        imgW = (int) (imgW * 0.95);
-                        System.out.println("Calculating new Width:" + imgW);
-                        
-                    }
-               }
-               if(bufferedImage.getHeight()> THEIGHT)
-               { 
-                   imgH = bufferedImage.getHeight();
-                    while(imgH > THEIGHT){
-                        imgH = (int) (imgH * 0.95);
-                        System.out.println("Calculating new Height:" + imgH);
-                    }
-               }
-
-                try {
-                    ImageResizer.resize(newFilePath, newFilePath, 0.9);
-                } catch (IOException ex) {
-                    Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            
-        
-            ImageIcon img = new ImageIcon(newFilePath);
-            Image imgIcon = img.getImage();
-            Image newImg = imgIcon.getScaledInstance(300, 300, Image.SCALE_DEFAULT);
-            jLabel4.setIcon(new ImageIcon(newImg));
-        }
-          
-        
-        
-        
-        
+         filePathField.setText(selectedFile.getAbsolutePath());
+     
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
