@@ -18,7 +18,7 @@ public class Log {
             File file = new File("log.txt");
             FileWriter fw = new FileWriter(file,true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(new java.util.Date() + ": " + logText);
+            bw.write(new java.util.Date() + ": " + logText + "\r");
             bw.flush();
             bw.close();
         }catch(IOException e){

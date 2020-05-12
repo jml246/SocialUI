@@ -477,14 +477,14 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
                // Media temp = new Media("C:/image.png","This is a test", 5, true, true);
                // System.out.println(temp.toString());
                 Main.publishMan.addMedia(m);
-                Main.mainGui.updateFeedlabel("Sending post to scheduler... Post at "+m.getTimeToPublish());
+                Main.mainGui.updateFeedLabel("Sending post to scheduler... Post at "+m.getTimeToPublish());
                 
     }//GEN-LAST:event_jButton1ActionPerformed
     public void updateFilePathField(String p)
     {
         this.filePathField.setText(p);
     }
-    public JLabel getImageScreen(){
+    public JLabel getImageScreenLabel(){
         return this.jLabel4;
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -512,7 +512,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         }.run();
             
         }
-         filePathField.setText(selectedFile.getAbsolutePath());
+         //filePathField.setText(selectedFile.getAbsolutePath());
      
         
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -548,7 +548,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         // TODO add your handling code here:
         new DeletePost();
     }//GEN-LAST:event_jButton3ActionPerformed
-    public void updateFeedlabel(String msg)
+    public void updateFeedLabel(String msg)
     {
         feedLabel.setText(feedLabel.getText() + new java.util.Date() + ": " + msg + "\n");
     }
@@ -619,7 +619,7 @@ public class SocialUI extends javax.swing.JFrame implements KeyListener, ActionL
         }
         if(words.length > 30){
             this.jButton1.setEnabled(false);
-            this.updateFeedlabel("Maximum hash tags exceeded for Instagram");
+            this.updateFeedLabel("Maximum hash tags exceeded for Instagram");
             
         }
         else

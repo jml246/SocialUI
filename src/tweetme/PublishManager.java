@@ -68,7 +68,7 @@ public class PublishManager extends Thread{
     private void updateFeedlabel(String msg)
     {
         
-        Main.mainGui.updateFeedlabel(Main.mainGui.getFeedLabelText() + new java.util.Date() + ": " + msg + "<br/>");
+        Main.mainGui.updateFeedLabel(Main.mainGui.getFeedLabelText() + new java.util.Date() + ": " + msg + "<br/>");
     }    
     public void run(){
         try {

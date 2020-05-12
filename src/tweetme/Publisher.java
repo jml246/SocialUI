@@ -39,33 +39,33 @@ public class Publisher {
         //String out = null;
                if(m.getFilePath() == "" && new File(m.getFilePath()).exists()){
                 //System.out.println("Publisher - Sending to twitter OK");   
-                Main.mainGui.updateFeedlabel("Sending tweet...");
+                Main.mainGui.updateFeedLabel("Sending tweet...");
                 try{
                     if(!m.isIsPubTwitter()){
                         MSTwitter.tweet.setStatus(m.getText());
                     }
-                    Main.mainGui.updateFeedlabel("Tweet text OK...");
+                    Main.mainGui.updateFeedLabel("Tweet text OK...");
                     System.out.println("Publisher - Sending text to twitter OK");
                     m.setIsPubTwitter(true);
                 }
                 catch(winterwell.jtwitter.TwitterException e)
                 {
-                    Main.mainGui.updateFeedlabel("Tweet text failed... : " + e.getMessage());
+                    Main.mainGui.updateFeedLabel("Tweet text failed... : " + e.getMessage());
                     System.out.println("Publisher - There was a problem" + e);
                 }catch(Exception e){e.printStackTrace();}
                 }
                else{
                    try{
                     if(!m.isIsPubTwitter()){
-                        Main.mainGui.updateFeedlabel("Sending tweet...");
+                        Main.mainGui.updateFeedLabel("Sending tweet...");
                         MSTwitter.tweet.updateStatusWithMedia(m.getText(), BigInteger.ZERO, new File(m.getFilePath()));
-                        Main.mainGui.updateFeedlabel("Tweet text OK...");
+                        Main.mainGui.updateFeedLabel("Tweet text OK...");
                         m.setIsPubTwitter(true);
                     }
                    
                    }catch(winterwell.jtwitter.TwitterException e)
                    {
-                       Main.mainGui.updateFeedlabel("Tweet with media failed... : " + e.getMessage());   
+                       Main.mainGui.updateFeedLabel("Tweet with media failed... : " + e.getMessage());   
                    }catch(Exception e){e.printStackTrace();}
                }
             
@@ -89,32 +89,32 @@ public class Publisher {
                     m.getFilePath().contains("jpeg"))
                 {
                     if(!m.isPubInsta()){
-                    Main.mainGui.updateFeedlabel("Sending Instagram post with image...");
+                    Main.mainGui.updateFeedLabel("Sending Instagram post with image...");
                     Instagram.instagram.sendRequest(new InstagramUploadPhotoRequest(
                         f, m.getText()));
                     }
                 if(checkHTTPResponse()){
-                    Main.mainGui.updateFeedlabel("Post sent to Instagram OK...");
+                    Main.mainGui.updateFeedLabel("Post sent to Instagram OK...");
                     m.setIsPubInsta(true);
                 }
                 else{
-                        Main.mainGui.updateFeedlabel("Post sent to Instagram Failed...");
+                        Main.mainGui.updateFeedLabel("Post sent to Instagram Failed...");
                         new Log(Instagram.instagram.getLastResponse().toString() + "/r");
                     }
                 }
                 else
                 {
                     if(m.getFilePath().contains("mp4") && m.isPubInsta()){
-                        Main.mainGui.updateFeedlabel("Sending Instagram post with video...");
+                        Main.mainGui.updateFeedLabel("Sending Instagram post with video...");
                         Instagram.instagram.sendRequest(new InstagramUploadVideoRequest(
                             f, m.getText()));
-                    Main.mainGui.updateFeedlabel("Sent to Instagram...");
+                    Main.mainGui.updateFeedLabel("Sent to Instagram...");
                     if(checkHTTPResponse()){
-                        Main.mainGui.updateFeedlabel("Post sent to Instagram OK...");
+                        Main.mainGui.updateFeedLabel("Post sent to Instagram OK...");
                         m.setIsPubInsta(true);
                     }
                     else{
-                        Main.mainGui.updateFeedlabel("Post sent to Instagram Failed...");
+                        Main.mainGui.updateFeedLabel("Post sent to Instagram Failed...");
                         new Log(Instagram.instagram.getLastResponse().toString()+"/r");
                         }
                     }
@@ -122,17 +122,17 @@ public class Publisher {
             }catch(IOException err)
             {
                 err.printStackTrace();
-                Main.mainGui.updateFeedlabel("IOException error: Unable to post to Instagram...");
+                Main.mainGui.updateFeedLabel("IOException error: Unable to post to Instagram...");
                 
             }catch(NullPointerException e){
-                Main.mainGui.updateFeedlabel("NullPointerException error: Unable to post to Instagram...");
+                Main.mainGui.updateFeedLabel("NullPointerException error: Unable to post to Instagram...");
                 
                 e.printStackTrace();}
             
             catch(Exception ex)
             {
                 ex.printStackTrace();
-                Main.mainGui.updateFeedlabel("Exception encountered: Unable to post to Instagram...");
+                Main.mainGui.updateFeedLabel("Exception encountered: Unable to post to Instagram...");
                 
             }
             

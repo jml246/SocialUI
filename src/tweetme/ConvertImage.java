@@ -26,119 +26,164 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class ConvertImage {
      
         String newFilePath = null;
-        
-        
         BufferedImage bufferedImage = null, newBufferedImage = null;
-        
-
         long l = new Date().getTime();
-        final int TWIDTH = 1024;
-        final int THEIGHT = 512;
-        final int IWIDTH = 1080;
-        final int IHEIGHT = 1350;
+        final int TWIDTHP = 1200;
+        final int THEIGHTP = 675;
+        final int IWIDTHL = 1080;
+        final int IHEIGHTL = 608;
+        final int IWIDTHP = 1080;
+        final int IHEIGHTP = 1350;
         boolean isPortrait = false;
         int imgW = 0;
         int imgH = 0;
         double reductionPercentage = 0.0;
             
-    public ConvertImage(File selectedFile)
+    public ConvertImage(File selectedFile) throws IOException
     {
-    newFilePath = selectedFile.getParent()+"\\"+"social-ui-temp-" +  l + ".jpg";
-        try {
-            //read file
-            Main.mainGui.updateFeedlabel("Reading image: " + selectedFile.getAbsolutePath());
-            bufferedImage = ImageIO.read(new File(selectedFile.getAbsolutePath()));
-            
-            
-            Main.mainGui.updateFeedlabel("Copying image to: " + newFilePath);
-            ImageIO.write(bufferedImage, "jpg", new File(newFilePath));
-            Main.mainGui.updateFeedlabel("Reading image: " + newFilePath);
-            
-            bufferedImage = ImageIO.read(new File(newFilePath));
-                
-            Main.mainGui.updateFilePathField(newFilePath);
-        
-        } catch (IOException ex) {
-            Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //get format
+        String formatName = getFormat(selectedFile.toString());
+        newFilePath = selectedFile.getParent() + "\\"+"social-ui-temp-" +  l + "." + formatName;
+        this.copyImage(selectedFile.toString(), newFilePath);
         //no conversion needed for instagram
+        
+        
         if(newFilePath.contains(".jpg") || 
                 (newFilePath.contains(".jpeg"))){
-            
-        
-        ImageIcon img = new ImageIcon(newFilePath);
-        Image imgIcon = img.getImage();
-        int h = Main.mainGui.getImageScreen().getHeight()-40;
-        Image newImg = imgIcon.getScaledInstance(Main.mainGui.getImageScreen().getWidth(), h, Image.SCALE_DEFAULT);
-        Main.mainGui.getImageScreen().setIcon(new ImageIcon(newImg));    
-
+                //do nothing and draw preview on form
+                this.drawImageScreenLabel(newFilePath);
         }
         
-
-            
-        //Do conversion from png to jpg
-        if(selectedFile.getAbsolutePath().contains(".png")){
+        
+        //PNG
+        //Do conversion from PNG to JPG
+        if(newFilePath.contains(".png")){
             System.out.println("Converting png to jpg");
-            System.out.println("Fetching absolute path: "+selectedFile.getAbsolutePath());
-            Main.mainGui.updateFeedlabel("Reading png file...");
-            bufferedImage = new BufferedImage(bufferedImage.getWidth(),
-                bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            bufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
-
+            System.out.println("Fetching absolute path: " + selectedFile.getAbsolutePath());
+            Main.mainGui.updateFeedLabel("Reading png file...");
             try {
-                ImageIO.write(bufferedImage, "jpg", new File(newFilePath));
-                Main.mainGui.updateFeedlabel("Converting png file to jpg...");
-                System.out.println("Writing to: "+newFilePath);
+                bufferedImage = ImageIO.read(new File(selectedFile.toString()));
+   
+                newFilePath = selectedFile.getParent()+"\\"+"social-ui-temp-" +  l + ".jpg";
+                // create a blank, RGB, same width and height, and a white background
+                BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+			bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+
+            // Write the jpeg file
+                ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));
+                Main.mainGui.updateFeedLabel("Converting png file to jpg...");
+                System.out.println("Writing to: " + newFilePath);
                 Main.mainGui.updateFilePathField(newFilePath);
-                Main.mainGui.updateFeedlabel("Converted png file to jpg completed...");
-                
+                Main.mainGui.updateFeedLabel("Converted png file to jpg completed...");
             } catch (IOException ex) {
                 Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //calculate percentage decrease
-            // Decrease = Decrease ÷ Original Number × 100
-            
-            ImageIcon img = new ImageIcon(newFilePath);
-            Image imgIcon = img.getImage();
-            Image newImg = imgIcon.getScaledInstance(300, 300, Image.SCALE_DEFAULT);
-            Main.mainGui.getImageScreen().setIcon(new ImageIcon(newImg));
+            }           
+            this.drawImageScreenLabel(newFilePath);
         }   
             //Is it within proportions?
             
-            
-            
+          
             //Do checks on image dimensions for Instagram
-            if(bufferedImage.getWidth() > THEIGHT || 
-                    bufferedImage.getHeight() > TWIDTH ||
-                    bufferedImage.getWidth() > IHEIGHT ||
-                    bufferedImage.getWidth() > IWIDTH)
+            if(bufferedImage.getWidth() > THEIGHTP || 
+                    bufferedImage.getHeight() > TWIDTHP ||
+                    bufferedImage.getWidth() > IHEIGHTP ||
+                    bufferedImage.getWidth() > IWIDTHP)
             {
-                JOptionPane.showMessageDialog(null,"Image is too large.<br/>"+
+                if (JOptionPane.showConfirmDialog(null, "<html>Image is too large.<br/>"+
                         "Instagram: Max is 1080 x 1350 and 5MB limit<br/>" +
-                            "Twitter: Max is 1024 x 512");
+                            "Twitter: Max is 1024 x 512</br>" +
+                        "Would you like to resize automatically?", "WARNING",
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        // yes option
+   
 
-            }
-            //find proportional dimensions and resize
+                //find proportional dimensions and resize
+            
+                //check width
                System.out.println("Bufferedimage width... "+bufferedImage.getWidth());
-               if(bufferedImage.getWidth() > TWIDTH){
-                   Main.mainGui.updateFeedlabel("File is too large...resizing to " + TWIDTH +" wide pixels.");
-                
-                reductionPercentage = (((double)TWIDTH / (double)bufferedImage.getWidth()));
-               System.out.println("TWIDTH... "+TWIDTH);
-                
-               System.out.println("Red Perc... "+reductionPercentage);
+               
+                //check if it is a landscape photo
+               if(bufferedImage.getWidth() > bufferedImage.getHeight() &&
+                       bufferedImage.getWidth() > IWIDTHP)
+               {
                    
-
-                try {
-                    Main.mainGui.updateFeedlabel("Reducing file by ... " + reductionPercentage + "%");
-                    ImageResizer.resize(newFilePath, newFilePath, reductionPercentage);
-                    
-                Main.mainGui.updateFeedlabel("Image file resized...");
-                } catch (IOException ex) {
-                    Main.mainGui.updateFeedlabel("Resizing failed...");
-                
-                    Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                   Main.mainGui.updateFeedLabel("File is too wide...resizing to " + IWIDTHP +" width pixels.");
+                   reductionPercentage = (((double)IWIDTHL / (double)bufferedImage.getWidth()));
+                   System.out.println("IWIDTHL... "+IWIDTHL); 
+                   System.out.println("Red Perc... "+reductionPercentage);
+                   ImageResizer.resize(newFilePath, newFilePath, IWIDTHL,IHEIGHTL);
+                   
+                   Main.mainGui.updateFeedLabel("Image file altered...");
                }
+               // if it is a portrait
+               if(bufferedImage.getHeight() > bufferedImage.getWidth() &&
+                       bufferedImage.getHeight() > IHEIGHTP){
+                   Main.mainGui.updateFeedLabel("File is too high...resizing to " + IHEIGHTP +" high pixels.");
+                   reductionPercentage = (((double)IHEIGHTP / (double)bufferedImage.getHeight()));
+                   System.out.println("THEIGHT... "+IHEIGHTP); 
+                   System.out.println("Red Perc... "+reductionPercentage);
+                   // Main.mainGui.updateFeedLabel("Reducing file by ... " + reductionPercentage + "%");
+                   Main.mainGui.updateFeedLabel("Altering Image...");
+                   ImageResizer.resize(newFilePath, newFilePath, IWIDTHP,IHEIGHTP);
+                   
+                   Main.mainGui.updateFeedLabel("Image file altered...");
+
+               }
+               
+                }
+                } 
+                else 
+                { 
+                     //do nothing
+                }
+}
+  
+    public void copyImage(String source, String destination)
+    {
+        //make a working copy
+        try {
+
+            if(source.contains("jpg") || source.contains("jpeg")){
+                Main.mainGui.updateFeedLabel("Reading image: " + source);
+                bufferedImage = ImageIO.read(new File(source));  
+                Main.mainGui.updateFeedLabel("Copying working JPG image to: " + destination);
+                ImageIO.write(bufferedImage, "jpg", new File(destination));
+            }
+            
+            if(source.contains("png"))
+            {
+               bufferedImage = ImageIO.read(new File(source)); 
+                // create a blank, RGB, same width and height, and a white background
+                BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+			bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+
+                // Write the jpeg file
+                ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));   
+            }
+            Main.mainGui.updateFeedLabel("Reading image: " + destination);   
+            bufferedImage = ImageIO.read(new File(destination));    
+            Main.mainGui.updateFilePathField("Copied working PNG image to..."+ destination);
+        
+        } catch (IOException ex) {
+            Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+    }
+    
+    public String getFormat(String file)
+    {
+        return file.substring(file.lastIndexOf(".") + 1);    
+    }
+
+   
+    private void drawImageScreenLabel(String filePath){
+            ImageIcon img = new ImageIcon(filePath);
+            Image imgIcon = img.getImage();
+            
+            //
+            int h = Main.mainGui.getImageScreenLabel().getHeight()-40;
+            Image newImg = imgIcon.getScaledInstance(Main.mainGui.getImageScreenLabel().getWidth(), h, Image.SCALE_DEFAULT);
+            Main.mainGui.getImageScreenLabel().setIcon(new ImageIcon(newImg));
     }
 }
