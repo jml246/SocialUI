@@ -24,7 +24,7 @@ public class Main {
         publishMan = new PublishManager();
         publishMan.start(); 
         mainGui = new SocialUI();
-        
+        //mainGui.setVisible(true);
        
         new Main();     
     }
