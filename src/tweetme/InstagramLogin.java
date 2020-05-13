@@ -5,9 +5,14 @@
  */
 package tweetme;
 
+import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -21,7 +26,26 @@ public class InstagramLogin extends javax.swing.JFrame {
     public InstagramLogin() {
         initComponents();
         this.setLocationRelativeTo(null);
+       
         this.jPasswordField1.setText("");
+        this.jTextField1.setText("");
+        
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(InstagramLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(InstagramLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(InstagramLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(InstagramLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }        
     }
 
     /**
@@ -45,6 +69,7 @@ public class InstagramLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Log in to Instagram");
+        setResizable(false);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tweetme/images/instagtramlogo.png"))); // NOI18N
@@ -163,17 +188,25 @@ public class InstagramLogin extends javax.swing.JFrame {
         
     }
     
-
+ 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-       
-        try {  
+        final ProgressBarStepIndeterminate p = new ProgressBarStepIndeterminate();
+
+        Thread t = new Thread(p);
+        Thread i = new Thread(new Runnable(){
+        public void run(){
+            
+            System.out.println("Instagram Credentials Runnable running");
+            
+            try {  
             if(checkCredentials()){
-                new Instagram(this.jTextField1.getText(), new String(jPasswordField1.getPassword()));
+                new Instagram(jTextField1.getText(), new String(jPasswordField1.getPassword()));
                 System.out.println("Print Successful Login header status: "+Instagram.instagram.getLastResponse());
                 System.out.println(Instagram.instagram.getLastResponse().toString().contains("HTTP/1.1 200 OK"));
                 if((Instagram.instagram.getLastResponse().toString().contains("HTTP/1.1 200 OK")))
-                    this.dispose();
+                    dispose();
+                    
                 }
             else{
                 JOptionPane.showMessageDialog(null, "User name or password is incorrect - could not log in. Please try again.");
@@ -182,8 +215,15 @@ public class InstagramLogin extends javax.swing.JFrame {
         catch (Exception ex) {
             Logger.getLogger(InstagramLogin.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+            
+        }finally{
+            p.frame.dispose();
+        }               
         }
-
+        
+        });
+        t.start();
+        i.start();
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -225,6 +265,8 @@ public class InstagramLogin extends javax.swing.JFrame {
                 new InstagramLogin().setVisible(true);
             }
         });
+        
+    
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

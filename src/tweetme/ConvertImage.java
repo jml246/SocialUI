@@ -39,19 +39,24 @@ public class ConvertImage {
         int imgH = 0;
         double reductionPercentage = 0.0;
             
-    public ConvertImage(File selectedFile) throws IOException
+    public ConvertImage(final File selectedFile) throws IOException
     {
-        //get format
+        final ProgressBarStepIndeterminate p = new ProgressBarStepIndeterminate();
+        Thread t = new Thread(p);
+        t.start();
+        Thread i = new Thread(new Runnable(){
+        public void run(){        
+            //get format
         String formatName = getFormat(selectedFile.toString());
         newFilePath = selectedFile.getParent() + "\\"+"social-ui-temp-" +  l + "." + formatName;
-        this.copyImage(selectedFile.toString(), newFilePath);
+        copyImage(selectedFile.toString(), newFilePath);
         //no conversion needed for instagram
         
         
         if(newFilePath.contains(".jpg") || 
                 (newFilePath.contains(".jpeg"))){
                 //do nothing and draw preview on form
-                this.drawImageScreenLabel(newFilePath);
+                drawImageScreenLabel(newFilePath);
         }
         
         
@@ -66,12 +71,16 @@ public class ConvertImage {
    
                 newFilePath = selectedFile.getParent()+"\\"+"social-ui-temp-" +  l + ".jpg";
                 // create a blank, RGB, same width and height, and a white background
-                BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+                final BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
 			bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
                 newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
 
             // Write the jpeg file
+
                 ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));
+       
+            
+                //5253025ImageIO.write(newBufferedImage, "jpg", new File(newFilePath));
                 Main.mainGui.updateFeedLabel("Converting png file to jpg...");
                 System.out.println("Writing to: " + newFilePath);
                 Main.mainGui.updateFilePathField(newFilePath);
@@ -79,7 +88,8 @@ public class ConvertImage {
             } catch (IOException ex) {
                 Logger.getLogger(SocialUI.class.getName()).log(Level.SEVERE, null, ex);
             }           
-            this.drawImageScreenLabel(newFilePath);
+            drawImageScreenLabel(newFilePath);
+          
         }   
             //Is it within proportions?
             
@@ -90,16 +100,18 @@ public class ConvertImage {
                     bufferedImage.getWidth() > IHEIGHTP ||
                     bufferedImage.getWidth() > IWIDTHP)
             {
+                p.frame.setVisible(false);
                 if (JOptionPane.showConfirmDialog(null, "<html>Image is too large.<br/>"+
                         "Instagram: Max is 1080 x 1350 and 5MB limit<br/>" +
                             "Twitter: Max is 1024 x 512</br>" +
                         "Would you like to resize automatically?", "WARNING",
                             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         // yes option
-   
+              
+                p.frame.setVisible(true);
 
                 //find proportional dimensions and resize
-            
+
                 //check width
                System.out.println("Bufferedimage width... "+bufferedImage.getWidth());
                
@@ -112,7 +124,11 @@ public class ConvertImage {
                    reductionPercentage = (((double)IWIDTHL / (double)bufferedImage.getWidth()));
                    System.out.println("IWIDTHL... "+IWIDTHL); 
                    System.out.println("Red Perc... "+reductionPercentage);
-                   ImageResizer.resize(newFilePath, newFilePath, IWIDTHL,IHEIGHTL);
+                   try {
+                       ImageResizer.resize(newFilePath, newFilePath, IWIDTHL,IHEIGHTL);
+                   } catch (IOException ex) {
+                       Logger.getLogger(ConvertImage.class.getName()).log(Level.SEVERE, null, ex);
+                   }
                    
                    Main.mainGui.updateFeedLabel("Image file altered...");
                }
@@ -125,18 +141,27 @@ public class ConvertImage {
                    System.out.println("Red Perc... "+reductionPercentage);
                    // Main.mainGui.updateFeedLabel("Reducing file by ... " + reductionPercentage + "%");
                    Main.mainGui.updateFeedLabel("Altering Image...");
-                   ImageResizer.resize(newFilePath, newFilePath, IWIDTHP,IHEIGHTP);
+                   try {
+                       ImageResizer.resize(newFilePath, newFilePath, IWIDTHP,IHEIGHTP);
+                   } catch (IOException ex) {
+                       Logger.getLogger(ConvertImage.class.getName()).log(Level.SEVERE, null, ex);
+                   }
                    
                    Main.mainGui.updateFeedLabel("Image file altered...");
 
                }
-               
+ 
+                    p.frame.dispose();
                 }
                 } 
                 else 
                 { 
                      //do nothing
                 }
+        }
+        });
+        //t.start();
+        i.start();
 }
   
     public void copyImage(String source, String destination)
