@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tweetme;
+package socialbutler;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -57,6 +57,7 @@ public class ConvertImage {
                 (newFilePath.contains(".jpeg"))){
                 //do nothing and draw preview on form
                 drawImageScreenLabel(newFilePath);
+                p.frame.dispose();
         }
         
         
@@ -208,7 +209,7 @@ public class ConvertImage {
             
             //
             int h = Main.mainGui.getImageScreenLabel().getHeight()-40;
-            Image newImg = imgIcon.getScaledInstance(Main.mainGui.getImageScreenLabel().getWidth(), h, Image.SCALE_DEFAULT);
+            Image newImg = imgIcon.getScaledInstance(Main.mainGui.getImageScreenLabel().getWidth()*-1, h, Image.SCALE_DEFAULT);
             Main.mainGui.getImageScreenLabel().setIcon(new ImageIcon(newImg));
     }
 }

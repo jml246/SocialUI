@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tweetme;
+package socialbutler;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -28,8 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import tweetme.Main;
-import tweetme.Media;
+import socialbutler.Main;
+import socialbutler.Media;
 
 /**
  *
