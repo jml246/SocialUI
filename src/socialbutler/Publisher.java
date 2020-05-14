@@ -8,6 +8,8 @@ package socialbutler;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.brunocvcunha.instagram4j.requests.InstagramUploadPhotoRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramUploadVideoRequest;
 import winterwell.jtwitter.Status;
@@ -35,6 +37,8 @@ public class Publisher {
                      
     }
     
+    
+    
     public void sendToTwitter(){
         //String out = null;
                if(m.getFilePath() == "" && new File(m.getFilePath()).exists()){
@@ -52,7 +56,8 @@ public class Publisher {
                 {
                     Main.mainGui.updateFeedLabel("Tweet text failed... : " + e.getMessage());
                     System.out.println("Publisher - There was a problem" + e);
-                }catch(Exception e){e.printStackTrace();}
+                }
+                catch(Exception e){e.printStackTrace();}
                 }
                else{
                    try{
@@ -61,6 +66,7 @@ public class Publisher {
                         MSTwitter.tweet.updateStatusWithMedia(m.getText(), BigInteger.ZERO, new File(m.getFilePath()));
                         Main.mainGui.updateFeedLabel("Tweet text OK...");
                         m.setIsPubTwitter(true);
+                        
                     }
                    
                    }catch(winterwell.jtwitter.TwitterException e)
@@ -108,7 +114,7 @@ public class Publisher {
                         Main.mainGui.updateFeedLabel("Sending Instagram post with video...");
                         Instagram.instagram.sendRequest(new InstagramUploadVideoRequest(
                             f, m.getText()));
-                    Main.mainGui.updateFeedLabel("Sent to Instagram...");
+                        Main.mainGui.updateFeedLabel("Sent to Instagram...");
                     if(checkHTTPResponse()){
                         Main.mainGui.updateFeedLabel("Post sent to Instagram OK...");
                         m.setIsPubInsta(true);
@@ -123,6 +129,24 @@ public class Publisher {
             {
                 err.printStackTrace();
                 Main.mainGui.updateFeedLabel("IOException error: Unable to post to Instagram...");
+                Main.mainGui.updateFeedLabel("Retrying to post to Instagram in 10 seconds...");
+                
+                new Thread(new Runnable(){
+                
+                    public void run(){
+                        try {
+                            try {
+                                Thread.sleep(10000);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Publisher.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            new Publisher(m);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Publisher.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }).start();
+                
                 
             }catch(NullPointerException e){
                 Main.mainGui.updateFeedLabel("NullPointerException error: Unable to post to Instagram...");

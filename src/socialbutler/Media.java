@@ -47,8 +47,8 @@ public class Media {
         this.timeToPublish = new Date(t + ( minutes * ONE_MINUTE_IN_MILLIS));
         this.twitter = twitter;
         this.instagram = instagram;
-        this.isPubTwitter = false;
-        this.isPubInsta = false;
+        this.isPubTwitter = false; //is published to twitter - these are 
+        this.isPubInsta = false; //has been published to instagram
     }
 
     public String toString(){
